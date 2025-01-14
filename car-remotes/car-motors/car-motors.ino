@@ -6,14 +6,14 @@
 SoftwareSerial hc12Serial(HC12_TX_PIN, HC12_RX_PIN);
 
 // Motor control pins
-#define LEFT_FRONT_FORWARD 5
-#define LEFT_FRONT_BACKWARD 6
-#define LEFT_REAR_FORWARD 9
-#define LEFT_REAR_BACKWARD 10
-#define RIGHT_FRONT_FORWARD 3
-#define RIGHT_FRONT_BACKWARD 4
-#define RIGHT_REAR_FORWARD 7
-#define RIGHT_REAR_BACKWARD 8
+#define LEFT_FRONT_FORWARD 9
+#define LEFT_FRONT_BACKWARD 10
+#define LEFT_REAR_FORWARD 6 
+#define LEFT_REAR_BACKWARD 5
+#define RIGHT_FRONT_FORWARD 11
+#define RIGHT_FRONT_BACKWARD 12
+#define RIGHT_REAR_FORWARD 8
+#define RIGHT_REAR_BACKWARD 7
 
 void setup() {
   hc12Serial.begin(9600);
@@ -33,27 +33,29 @@ void loop() {
     String command = hc12Serial.readStringUntil('\n');
     Serial.println("Received: " + command);
 
-    if (command == "5") {
+    if (command == "S") {
       stopCar();
-    } else if (command == "2") {
+    } else if (command == "F") {
       moveForward();
-    } else if (command == "1") {
+    } else if (command == "TL") {
       moveTopLeft();
-    } else if (command == "3") {
+    } else if (command == "TR") {
       moveTopRight();
-    } else if (command == "4") {
+    } else if (command == "L") {
       strafeLeft();
-    } else if (command == "6") {
+    } else if (command == "R") {
       strafeRight();
-    } else if (command == "7") {
+    } else if (command == "BL") {
       moveBottomLeft();
-    } else if (command == "8") {
+    } else if (command == "B") {
       moveBackward();
-    } else if (command == "9") {
+    } else if (command == "BR") {
       moveBottomRight();
     } else {
       Serial.println("Unknown command: " + command);
     }
+  } else {
+    Serial.println("HC-12 not working");
   }
 
   delay(50);
@@ -82,17 +84,6 @@ void moveBackward() {
 }
 
 void strafeLeft() {
-  digitalWrite(LEFT_FRONT_FORWARD, LOW);
-  digitalWrite(LEFT_FRONT_BACKWARD, HIGH);
-  digitalWrite(LEFT_REAR_FORWARD, HIGH);
-  digitalWrite(LEFT_REAR_BACKWARD, LOW);
-  digitalWrite(RIGHT_FRONT_FORWARD, HIGH);
-  digitalWrite(RIGHT_FRONT_BACKWARD, LOW);
-  digitalWrite(RIGHT_REAR_FORWARD, LOW);
-  digitalWrite(RIGHT_REAR_BACKWARD, HIGH);
-}
-
-void strafeRight() {
   digitalWrite(LEFT_FRONT_FORWARD, HIGH);
   digitalWrite(LEFT_FRONT_BACKWARD, LOW);
   digitalWrite(LEFT_REAR_FORWARD, LOW);
@@ -103,24 +94,35 @@ void strafeRight() {
   digitalWrite(RIGHT_REAR_BACKWARD, LOW);
 }
 
-void moveTopLeft() {
-  digitalWrite(LEFT_FRONT_FORWARD, HIGH);
-  digitalWrite(LEFT_FRONT_BACKWARD, LOW);
-  digitalWrite(LEFT_REAR_FORWARD, LOW);
+void strafeRight() {
+  digitalWrite(LEFT_FRONT_FORWARD, LOW);
+  digitalWrite(LEFT_FRONT_BACKWARD, HIGH);
+  digitalWrite(LEFT_REAR_FORWARD, HIGH);
   digitalWrite(LEFT_REAR_BACKWARD, HIGH);
+  digitalWrite(RIGHT_FRONT_FORWARD, HIGH);
+  digitalWrite(RIGHT_FRONT_BACKWARD, HIGH);
+  digitalWrite(RIGHT_REAR_FORWARD, LOW);
+  digitalWrite(RIGHT_REAR_BACKWARD, HIGH);
+}
+
+void moveTopLeft() {
+  digitalWrite(LEFT_FRONT_FORWARD, LOW);
+  digitalWrite(LEFT_FRONT_BACKWARD, LOW);
+  digitalWrite(LEFT_REAR_FORWARD, HIGH);
+  digitalWrite(LEFT_REAR_BACKWARD, LOW);
   digitalWrite(RIGHT_FRONT_FORWARD, HIGH);
   digitalWrite(RIGHT_FRONT_BACKWARD, LOW);
   digitalWrite(RIGHT_REAR_FORWARD, LOW);
-  digitalWrite(RIGHT_REAR_BACKWARD, HIGH);
+  digitalWrite(RIGHT_REAR_BACKWARD, LOW);
 }
 
 void moveTopRight() {
   digitalWrite(LEFT_FRONT_FORWARD, HIGH);
   digitalWrite(LEFT_FRONT_BACKWARD, LOW);
-  digitalWrite(LEFT_REAR_FORWARD, HIGH);
+  digitalWrite(LEFT_REAR_FORWARD, LOW);
   digitalWrite(LEFT_REAR_BACKWARD, LOW);
   digitalWrite(RIGHT_FRONT_FORWARD, LOW);
-  digitalWrite(RIGHT_FRONT_BACKWARD, HIGH);
+  digitalWrite(RIGHT_FRONT_BACKWARD, LOW);
   digitalWrite(RIGHT_REAR_FORWARD, HIGH);
   digitalWrite(RIGHT_REAR_BACKWARD, LOW);
 }
@@ -129,8 +131,8 @@ void moveBottomLeft() {
   digitalWrite(LEFT_FRONT_FORWARD, LOW);
   digitalWrite(LEFT_FRONT_BACKWARD, HIGH);
   digitalWrite(LEFT_REAR_FORWARD, LOW);
-  digitalWrite(LEFT_REAR_BACKWARD, HIGH);
-  digitalWrite(RIGHT_FRONT_FORWARD, HIGH);
+  digitalWrite(LEFT_REAR_BACKWARD, LOW);
+  digitalWrite(RIGHT_FRONT_FORWARD, LOW);
   digitalWrite(RIGHT_FRONT_BACKWARD, LOW);
   digitalWrite(RIGHT_REAR_FORWARD, LOW);
   digitalWrite(RIGHT_REAR_BACKWARD, HIGH);
@@ -139,12 +141,12 @@ void moveBottomLeft() {
 void moveBottomRight() {
   digitalWrite(LEFT_FRONT_FORWARD, LOW);
   digitalWrite(LEFT_FRONT_BACKWARD, HIGH);
-  digitalWrite(LEFT_REAR_FORWARD, HIGH);
+  digitalWrite(LEFT_REAR_FORWARD, LOW);
   digitalWrite(LEFT_REAR_BACKWARD, LOW);
   digitalWrite(RIGHT_FRONT_FORWARD, LOW);
-  digitalWrite(RIGHT_FRONT_BACKWARD, HIGH);
-  digitalWrite(RIGHT_REAR_FORWARD, HIGH);
-  digitalWrite(RIGHT_REAR_BACKWARD, LOW);
+  digitalWrite(RIGHT_FRONT_BACKWARD, LOW);
+  digitalWrite(RIGHT_REAR_FORWARD, LOW);
+  digitalWrite(RIGHT_REAR_BACKWARD, HIGH);
 }
 
 void stopCar() {
